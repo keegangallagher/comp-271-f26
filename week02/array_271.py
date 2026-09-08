@@ -120,10 +120,25 @@ class Array271:
         # Step 2: place the new value in the next free slot.
         self.items[self.occupancy] = value
 
-        # Step 3: record that one more slot is now in use.
+        # Step 3: record that one more slot is now in use. 
         self.occupancy += 1
 
     def resize(self):
+        growth = self.capacity * self.resize_factor # create a variable that I can check is an int
+
+        if growth % 1 != 0: # if the growth is a decimal i need to round it up by one
+            growth = int(growth) + 1 # round up in case it is less than 1
+
+        new_capacity = int(self.capacity + growth) # new variable is going to increase my capacity
+
+        new_list = [None] * new_capacity #new list based on __innit__ that I will fill with the old list
+
+        for i in range(0, self.occupancy): # loop that goes through every filled space in the list
+            new_list[i] = self.items[i] #copy the conents of self.items to my new list
+
+        self.items = new_list #replace the old array with my new one
+        self.capacity = new_capacity #new capacity based on the amount needed from the increase
+
         """Grow the array's capacity when it's full. YOUR CODE GOES HERE.
 
         This method is intentionally left unimplemented (just `pass`).
@@ -132,7 +147,7 @@ class Array271:
         actually happen.
 
         Think through, and then implement, the following steps:
-
+    
             1. Compute a new, larger capacity from the current one using
                `resize_factor`. For example, growing by resize_factor
                means: new_capacity = capacity + (capacity * resize_factor).
@@ -162,4 +177,3 @@ class Array271:
         before finishing the copy? Is there any reason to ever *shrink*
         capacity, and would `resize_factor` still make sense for that?
         """
-        pass
