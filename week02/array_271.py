@@ -124,6 +124,21 @@ class Array271:
         self.occupancy += 1
 
     def resize(self):
+        growth = self.capacity * self.resize_factor # create a variable that I can check is an int
+
+        if growth % 1 != 0: # if the growth is a decimal i need to round it up by one
+            growth = int(growth) + 1 # round up in case it is less than 1
+
+        new_capacity = int(self.capacity + growth) # new variable is going to increase my capacity
+
+        new_list = [None] * new_capacity #new list based on __innit__ that I will fill with the old list
+
+        for i in range(0, self.occupancy): # loop that goes through every filled space in the list
+            new_list[i] = self.items[i] #copy the conents of self.items to my new list
+
+        self.items = new_list #replace the old array with my new one
+        self.capacity = new_capacity #new capacity based on the amount needed from the increase
+
         """Grow the array's capacity when it's full. YOUR CODE GOES HERE.
 
         This method is intentionally left unimplemented (just `pass`).
