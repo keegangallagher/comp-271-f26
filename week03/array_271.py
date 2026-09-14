@@ -49,6 +49,7 @@ class Array271:
     """
 
     def __init__(self, capacity: int = 2, resize_factor: float = 0.25):
+<<<<<<< HEAD
         """Construct an empty Array271.
 
         Parameters:
@@ -92,6 +93,30 @@ class Array271:
 
     def get_item(self, i: int):
         """Return the string at index i, or None if i is out of range.
+=======
+        self.__capacity: int = capacity
+        self.__resize_factor: float = resize_factor
+        self.__occupancy: int = 0
+        self.__items: list = [None] * capacity
+
+    def __str__(self):
+        return f"Array271(capacity={self.__capacity}, resize_factor={self.__resize_factor}, occupancy={self.__occupancy}, items={self.__items})"
+
+    def get_capacity(self):
+        return self.__capacity
+    def get_resize_factor(self):
+        return self.__resize_factor
+    def get_occupancy(self):
+        return self.__occupancy
+    def get_items(self):
+        return self.__items
+
+    def get_item(self, i):
+        item = None
+        if i >=0 and i < self.__occupancy:
+            item = self.__items[i]
+        return item
+>>>>>>> 3baf6b2 (sy)
 
         "Out of range" means outside the *occupied* portion of the array
         (0 <= i < occupancy) -- an index that's within capacity but past
@@ -111,6 +136,7 @@ class Array271:
     # ------------------------------------------------------------------
 
     def add(self, value: str):
+<<<<<<< HEAD
         """Add a string to the array, growing it first if necessary.
 
         1. If occupancy has reached capacity, there's no free slot left,
@@ -173,3 +199,32 @@ class Array271:
             temp[i] = self._items[i]
         self._items = temp
         self._capacity = growth
+=======
+        if self.__occupancy == self.__capacity:
+            self.__resize()
+        self.__items[self.__occupancy] = value
+        self.__occupancy += 1
+
+    def __resize(self):
+        growth = ceil(self.__capacity*(1+self.__resize_factor))
+        temp = [None] * growth
+        for i in range(self.__capacity):
+            temp[i] = self.__items[i]
+        self.__items = temp
+        self.__capacity = growth
+
+"""
+    def remove(self, i):
+        success = False
+        if i >= 0 and i< self.__occupancy:
+            success = True
+            self.__items[i] = None
+        return success
+"""
+
+    def remove(self, i):
+        success = i >= 0 and i < self.__occupancy
+        if success:
+            self.__items[i] = None
+        return success
+>>>>>>> 3baf6b2 (sy)
