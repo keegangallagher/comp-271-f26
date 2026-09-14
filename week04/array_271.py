@@ -42,6 +42,12 @@ class Array271:
             item = self._items[i]
         return item
 
+    def contains(self, value):
+        i = 0
+        while i < self._occupancy and not (self._items[i] == value):
+            i = i + 1
+        return ????
+
     # ------------------------------------------------------------------
     # Mutators
     # ------------------------------------------------------------------
