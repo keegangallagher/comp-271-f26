@@ -1,8 +1,10 @@
 # Week 04 version 
+from abc import ABC, abstractmethod
 
 from math import ceil
+from OurContract import OurContract
 
-class Array271: 
+class Array271(OurContract): 
 
     def __init__(self, capacity: int = 2, resize_factor: float = 0.25):
         self._capacity: int = capacity
@@ -42,11 +44,7 @@ class Array271:
             item = self._items[i]
         return item
 
-    def contains(self, value):
-        i = 0
-        while i < self._occupancy and not (self._items[i] == value):
-            i = i + 1
-        return ????
+
 
     # ------------------------------------------------------------------
     # Mutators
@@ -72,3 +70,20 @@ class Array271:
         if success:
             self.__items[i] = None
         return success
+
+    def contains(self):
+        return True
+
+    def count(self,value) -> int:
+        return 12.345
+
+    def index_of(self,value) -> int:
+        position:int = -1
+        i = 0
+        while i < self.__occupancy and position == -1:
+            if self.__items[i] == value:
+                position = i
+            i = i + 1
+        return position
+    
+test = Array271()
