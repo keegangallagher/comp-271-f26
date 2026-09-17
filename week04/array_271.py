@@ -1,10 +1,26 @@
-# Week 04 version 
+# ============================================================================
+# NOTE ON TYPE HINTS
+# ----------------------------------------------------------------------------
+# The type hints in this file (e.g. "i: int", "-> bool") are for
+# DEMONSTRATION / ILLUSTRATIVE purposes only. Python does not enforce them
+# at runtime -- they are documentation for readers and tools like mypy, not
+# a guarantee. Passing an argument of the "wrong" type will not raise an
+# error on its own.
+# ============================================================================
 
+# Week 04 version
+# Array-backed implementation of the OurContract interface. Storage grows
+# automatically as items are added; it never shrinks back down.
+from abc import abstractmethod
 from math import ceil
+from OurContract import OurContract
 
-class Array271: 
+class Array271(OurContract):
 
     def __init__(self, capacity: int = 2, resize_factor: float = 0.25):
+        # capacity: how many slots __items currently has (used + free)
+        # resize_factor: fraction to grow by when add() runs out of room
+        # occupancy: how many slots are actually holding a value
         self._capacity: int = capacity
         self._resize_factor: float = resize_factor
         self._occupancy: int = 0
@@ -37,38 +53,79 @@ class Array271:
         return self._items
 
     def get_item(self, i: int):
+        # Bounds-checked read: out-of-range indices return None instead
+        # of raising, so callers don't have to guard every access.
         item = None
         if 0 <= i < self._occupancy:
             item = self._items[i]
         return item
 
-    def contains(self, value):
-        i = 0
-        while i < self._occupancy and not (self._items[i] == value):
-            i = i + 1
-        return ????
+
 
     # ------------------------------------------------------------------
     # Mutators
     # ------------------------------------------------------------------
 
+
     def add(self, value: str):
-        if self.__occupancy == self.__capacity:
+        # Grow first if the array is full, then append at the next free
+        # slot (index == current occupancy) and bump occupancy by one.
+        if self._occupancy == self._capacity:
             self.__resize()
-        self.__items[self.__occupancy] = value
-        self.__occupancy += 1
+        self._items[self._occupancy] = value
+        self._occupancy += 1
 
-    def __resize(self):
-        growth = ceil(self.__capacity*(1+self.__resize_factor))
+    def __resize(self) -> None:
+        # Grow capacity by resize_factor (e.g. 0.25 == 25% bigger),
+        # rounding up so capacity always increases by at least one slot.
+        # Copies existing items into a fresh, larger list.
+        growth = ceil(self._capacity*(1+self._resize_factor))
         temp = [None] * growth
-        for i in range(self.__capacity):
-            temp[i] = self.__items[i]
-        self.__items = temp
-        self.__capacity = growth
+        for i in range(self._capacity):
+            temp[i] = self._items[i]
+        self._items = temp
+        self._capacity = growth
 
 
-    def remove(self, i):
-        success = i >= 0 and i < self.__occupancy
+    def remove(self, i: int) -> bool:
+        # Clears the slot at index i (sets it to None) but does not
+        # shift later items down or decrement occupancy.
+        success = i >= 0 and i < self._occupancy
         if success:
-            self.__items[i] = None
+            self._items[i] = None
         return success
+
+    def contains(self,value: str) -> bool:
+        # Stub: always reports True, and is still missing the value
+        # parameter required by the contract. Needs to actually search
+        # _items for value and return whether it was found.
+        return True
+
+    def count(self, value: str) -> int:
+        # Stub: should count how many occupied slots equal value
+        # (like list.count), not return a hardcoded placeholder number.
+        return 12.345
+
+    def index_of(self, value: str) -> int:
+        # Linear search from the front; returns the first matching
+        # index, or -1 if value is never found among occupied slots.
+        position:int = -1
+        i = 0
+        while i < self._occupancy and position == -1:
+            if self._items[i] == value:
+                position = i
+            i = i + 1
+        return position
+
+# Quick manual smoke test when this file is run directly.
+if __name__ == "__main__":
+    print("Quick manual smoke test of Array271 class...")
+    test = Array271()
+    print(test)
+    test.add("a")
+    test.add("b")
+    test.add("c")
+    print(test)
+    print(f"index_of('b') = {test.index_of('b')}")
+    print(f"index_of('z') = {test.index_of('z')}")
+    print(f"count() = {test.count('a')}") 
