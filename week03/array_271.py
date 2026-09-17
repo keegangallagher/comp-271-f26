@@ -105,13 +105,13 @@ class Array271:
         # no free slots left
         if self.__occupancy == self.__capacity:
             # make room before writing
-            self.__resize()
+            self.__upsize()
         # write into the next free slot
         self.__items[self.__occupancy] = value
         # one more slot is now in use
         self.__occupancy += 1
 
-    def __resize(self):
+    def __upsize(self):
         """Grow capacity by `resize_factor`, copying existing items over.
 
         Capacity always grows by at least one slot: `ceil` guarantees
@@ -130,8 +130,6 @@ class Array271:
         # record the new capacity
         self.__capacity = growth
 
-
-
     def remove(self, i):
         """Clear the value at index `i`, leaving a gap instead of shifting.
 
@@ -142,8 +140,38 @@ class Array271:
         assignment to fix that.
         """
         # only occupied slots can be removed
-        success = i >= 0 and i < self.__occupancy
-        if success:
-            # blank the slot (leaves a gap -- see docstring)
-            self.__items[i] = None
-        return success
+        if i >= 0 and i < self.__occupancy: # is this position in the array?
+
+            removed_item = self.__items[i] #save what it was
+            self.__items[i] = None #remove the item
+
+            for j in range (i, self.__occupancy-1): #loop through and move everything to the left
+                self.__items[j] = self.__items [j+1]
+
+            self.__occupancy -= 1 #the occupancy is now reduced
+            outcome = (removed_item) #make the return say what was removed
+
+            self.__items[self.__occupancy] = None #make far left value empty
+
+            self.__downsize() #make the list smaller if it is half empty
+
+        else:
+            outcome = False
+
+        return outcome
+
+    
+    def __downsize(self): #new mutator to shrink
+        # new, SMALLER capacity
+        reduction = ceil(self.__capacity * 0.5) #reduce by half of the list
+
+        if reduction < self.__occupancy: #is the amount to reduce smaller than half? then just shrink by the amount of occupancies
+            reduction = self.__occupancy
+
+        temp = [None] * reduction #new list thats the size of the occupants
+
+        for i in range(0, self.__occupancy): #make new list
+            temp[i] = self.__items[i] #replace every item in items with the new smaller list
+
+        self.__items = temp #make the new array into og self items
+        self.__capacity = reduction #new size
