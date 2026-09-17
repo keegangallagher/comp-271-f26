@@ -95,7 +95,7 @@ class Array271(OurContract):
             self._items[i] = None
         return success
 
-    def contains(self) -> bool:
+    def contains(self,value: str) -> bool:
         # Stub: always reports True, and is still missing the value
         # parameter required by the contract. Needs to actually search
         # _items for value and return whether it was found.
