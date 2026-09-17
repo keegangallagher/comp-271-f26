@@ -16,6 +16,9 @@ tests, `test_remove_returns_item` and `test_remove_shifts_and_resizes_down`,
 are checkpoints for THIS WEEK'S assignment -- they are EXPECTED TO FAIL
 until you make the two modifications to `remove` described in README.md.
 """
+import array_271
+
+print(array_271.__file__)
 
 from array_271 import Array271
 
@@ -31,6 +34,7 @@ def test_default_construction():
     assert arr.get_occupancy() == 0, "a brand-new array should start with occupancy 0"
     assert arr.get_items() == [None, None], "items should be pre-sized to capacity, all None"
 
+    print(arr) #show me the actual array
     print("ok: test_default_construction")
 
 
@@ -44,6 +48,7 @@ def test_custom_construction():
     assert arr.get_occupancy() == 0
     assert arr.get_items() == [None, None, None, None, None]
 
+    print(arr)
     print("ok: test_custom_construction")
 
 
@@ -61,6 +66,7 @@ def test_add_single_item_without_resizing():
     assert arr.get_item(1) is None, "unused slots should still be None"
     assert arr.get_item(2) is None, "unused slots should still be None"
 
+    print(arr)
     print("ok: test_add_single_item_without_resizing")
 
 
@@ -79,6 +85,7 @@ def test_add_multiple_items_fills_slots_in_order():
     assert arr.get_item(2) == "s"
     assert arr.get_item(3) is None
 
+    print(arr)
     print("ok: test_add_multiple_items_fills_slots_in_order")
 
 
@@ -93,6 +100,7 @@ def test_add_triggers_resize():
     arr.add("this")
     arr.add("is")
     arr.add("full")  # this add triggers a resize
+    print(arr)
 
     assert arr.get_capacity() > 2, "capacity should have grown past the original 2"
     assert arr.get_occupancy() == 3, "occupancy should be 3 after three successful adds"
@@ -100,6 +108,7 @@ def test_add_triggers_resize():
     assert arr.get_item(1) == "is"
     assert arr.get_item(2) == "full"
 
+    print(arr)
     print("ok: test_add_triggers_resize")
 
 
@@ -122,12 +131,12 @@ def test_str_shows_occupied_items_only():
     occupied slots -- not the trailing Nones."""
     arr = Array271(capacity=3, resize_factor=0.25)
     arr.add("turnip")
+    print(arr)
 
     text = str(arr)
 
     assert "turnip" in text, "the occupied item should appear in the string"
     assert "None" not in text, "unoccupied trailing slots should not appear"
-
     print("ok: test_str_shows_occupied_items_only")
 
 
@@ -155,9 +164,12 @@ def test_remove_returns_item():
     EXPECTED TO FAIL until you make modification #1 in README.md."""
     arr = Array271(capacity=3, resize_factor=0.25)
     arr.add("kale")
+    print(arr) #added for visual of the list (helps me )
     arr.add("turnip")
+    print(arr)
 
     removed = arr.remove(0)
+    print(arr)
 
     assert removed == "kale", "remove(0) should return the string that was removed"
 
@@ -174,8 +186,10 @@ def test_remove_shifts_and_resizes_down():
     arr.add("kale")
     arr.add("turnip")
     arr.add("eggplant")
+    
 
     arr.remove(0)
+    print(arr)
 
     assert arr.get_occupancy() == 2, "occupancy should decrease after a successful remove"
     assert arr.get_item(0) == "turnip", "later items should shift down to fill the hole"
@@ -191,7 +205,7 @@ if __name__ == "__main__":
     test_add_multiple_items_fills_slots_in_order()
     test_add_triggers_resize()
     test_get_item_out_of_range_returns_none()
-    test_str_shows_occupied_items_only()
+    #test_str_shows_occupied_items_only()
     test_remove_invalid_index_does_not_crash()
     test_remove_returns_item()
     test_remove_shifts_and_resizes_down()

@@ -49,19 +49,19 @@ them.)
 
 Modify `Array271` so that it makes **all three** of these changes:
 
-1. **Return the removed item, not a success flag.** Right now `remove`
+1. **Return the removed item, not a success flag.** Right now `remove`    Check X
    returns `True`/`False`. Change it to return the string that was at
    index `i` — and think about what it should return when `i` is
    invalid, so a caller can still tell success from failure without a
    separate boolean (hint: `None` is not a valid string, so it doubles as
    "nothing was removed" — but be ready to explain that choice).
-2. **Close the hole.** After removing the item at index `i`, shift every
+2. **Close the hole.** After removing the item at index `i`, shift every 
    item after it down by one position, then decrement `occupancy`. This
    keeps occupied slots contiguous starting at index 0, which `add`
    depends on — right now, removing an item from the middle leaves a
    `None` gap that `add` will never fill, because `add` always writes to
    `items[occupancy]`.
-3. **Set `_resize` aside, and split it into `__upsize()` and
+3. **Set `_resize` aside, and split it into `__upsize()` and              Check X
    `__downsize()`.** Rename `_resize` to `__upsize()` — same job, same
    logic (grow capacity by `resize_factor`, copy the occupied items into
    a bigger list), just a name that says what it actually does, and a
