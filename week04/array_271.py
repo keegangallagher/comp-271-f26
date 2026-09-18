@@ -99,23 +99,38 @@ class Array271(OurContract):
         # Stub: always reports True, and is still missing the value
         # parameter required by the contract. Needs to actually search
         # _items for value and return whether it was found.
-        return True
+        """
+        found = False
+        i = 0
+        while i < self._occupancy and not found:
+            found = self._items[i] == value
+            i += 1
+        return found
+        """
+        return len(self.index_of(value)) > 0
+
+    
+    def index_of(self, value: str) -> tuple:
+        # Linear search from the front; returns the first matching
+        # index, or -1 if value is never found among occupied slots.
+        result = ()
+        i = 0
+        while i < self._occupancy and not result:
+            if self._items[i] == value:
+                result = (i)
+            i = i + 1
+        return result
+
 
     def count(self, value: str) -> int:
         # Stub: should count how many occupied slots equal value
         # (like list.count), not return a hardcoded placeholder number.
-        return 12.345
-
-    def index_of(self, value: str) -> int:
-        # Linear search from the front; returns the first matching
-        # index, or -1 if value is never found among occupied slots.
-        position:int = -1
-        i = 0
-        while i < self._occupancy and position == -1:
-            if self._items[i] == value:
-                position = i
-            i = i + 1
-        return position
+        count = 0
+        for i in range(self._occupancy):
+            #if self._items[i] == value:
+            #    count +=1
+            count = count+1 if self._items[i] == value else count
+        return count
 
 # Quick manual smoke test when this file is run directly.
 if __name__ == "__main__":
