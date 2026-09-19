@@ -112,7 +112,8 @@ class Array271(OurContract):
     
     def index_of(self, value: str) -> tuple:
         # Linear search from the front; returns the first matching
-        # index, or -1 if value is never found among occupied slots.
+        # index as a one-element tuple, e.g. (2,), or an empty tuple ()
+        # if value is never found among occupied slots.
         result = ()
         i = 0
         while i < self._occupancy and len(result) == 0:

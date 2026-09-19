@@ -52,7 +52,7 @@ class OurContract(ABC):
         """Find the position of value within the collection.
 
         Example: if the collection currently holds ["a", "b", "c"], then
-        index_of("b") should return (1).
+        index_of("b") should return (1,).
 
         Parameters:
             value: the item to search for.
