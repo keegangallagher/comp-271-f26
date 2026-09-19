@@ -115,10 +115,27 @@ class Array271(OurContract):
         # index, or -1 if value is never found among occupied slots.
         result = ()
         i = 0
-        while i < self._occupancy and not result:
+        while i < self._occupancy and len(result) == 0:
             if self._items[i] == value:
-                result = (i)
+                # The trailing comma is what makes this a tuple. Parentheses
+                # alone do nothing: (i) is just the integer i, the same way
+                # (2 + 3) is just 5. A one-element tuple needs the comma,
+                # (i,), so the caller always gets a tuple back, never an int.
+                result = (i,)
             i = i + 1
+        return result
+
+
+    def indices(self, value: str) -> tuple:
+        # Linear search over the occupied slots only; collects every
+        # matching index, front to back, into an immutable tuple.
+        result = ()
+        for i in range(self._occupancy):
+            if self._items[i] == value:
+                # (i,) is a one-element tuple; the comma is required (plain
+                # (i) is just the integer i). Tuples are immutable, so "+"
+                # builds a new, longer tuple rather than changing the old one.
+                result = result + (i,)
         return result
 
 
