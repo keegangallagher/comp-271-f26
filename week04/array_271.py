@@ -99,23 +99,56 @@ class Array271(OurContract):
         # Stub: always reports True, and is still missing the value
         # parameter required by the contract. Needs to actually search
         # _items for value and return whether it was found.
-        return True
+        """
+        found = False
+        i = 0
+        while i < self._occupancy and not found:
+            found = self._items[i] == value
+            i += 1
+        return found
+        """
+        return len(self.index_of(value)) > 0
+
+    
+    def index_of(self, value: str) -> tuple:
+        # Linear search from the front; returns the first matching
+        # index as a one-element tuple, e.g. (2,), or an empty tuple ()
+        # if value is never found among occupied slots.
+        result = ()
+        i = 0
+        while i < self._occupancy and len(result) == 0:
+            if self._items[i] == value:
+                # The trailing comma is what makes this a tuple. Parentheses
+                # alone do nothing: (i) is just the integer i, the same way
+                # (2 + 3) is just 5. A one-element tuple needs the comma,
+                # (i,), so the caller always gets a tuple back, never an int.
+                result = (i,)
+            i = i + 1
+        return result
+
+
+    def indices(self, value: str) -> tuple:
+        # Linear search over the occupied slots only; collects every
+        # matching index, front to back, into an immutable tuple.
+        result = ()
+        for i in range(self._occupancy):
+            if self._items[i] == value:
+                # (i,) is a one-element tuple; the comma is required (plain
+                # (i) is just the integer i). Tuples are immutable, so "+"
+                # builds a new, longer tuple rather than changing the old one.
+                result = result + (i,)
+        return result
+
 
     def count(self, value: str) -> int:
         # Stub: should count how many occupied slots equal value
         # (like list.count), not return a hardcoded placeholder number.
-        return 12.345
-
-    def index_of(self, value: str) -> int:
-        # Linear search from the front; returns the first matching
-        # index, or -1 if value is never found among occupied slots.
-        position:int = -1
-        i = 0
-        while i < self._occupancy and position == -1:
-            if self._items[i] == value:
-                position = i
-            i = i + 1
-        return position
+        count = 0
+        for i in range(self._occupancy):
+            #if self._items[i] == value:
+            #    count +=1
+            count = count+1 if self._items[i] == value else count
+        return count
 
 # Quick manual smoke test when this file is run directly.
 if __name__ == "__main__":

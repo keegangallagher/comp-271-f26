@@ -48,17 +48,39 @@ class OurContract(ABC):
         pass
 
     @abstractmethod
-    def index_of(self, value: Any) -> int:
+    def index_of(self, value: Any) -> tuple:
         """Find the position of value within the collection.
 
         Example: if the collection currently holds ["a", "b", "c"], then
-        index_of("b") should return 1.
+        index_of("b") should return (1,).
 
         Parameters:
             value: the item to search for.
         Returns:
-            int: the zero-based index of the first occurrence of value,
-            or -1 if value is not present.
+            A tuple with the integer position of the item or
+            an empty tuple if value is not present
+        """
+        pass
+
+    @abstractmethod
+    def indices(self, value: Any) -> tuple:
+        """Find every position at which value occurs in the collection.
+
+        Unlike index_of, which stops at the first match, indices reports
+        all of them, in increasing order (front to back).
+
+        Example: if the collection currently holds ["b", "a", "n", "a",
+        "n", "a"], then indices("a") should return (1, 3, 5), indices("n")
+        should return (2, 4), and indices("z") should return an empty
+        tuple, (). A value that occurs exactly once yields a one-element
+        tuple, e.g. indices("b") returns (0,).
+
+        Parameters:
+            value: the item to search for.
+        Returns:
+            tuple: the integer positions of every element equal to value,
+            in increasing order, or an empty tuple if value is not present.
+            The collection itself is not modified.
         """
         pass
 
