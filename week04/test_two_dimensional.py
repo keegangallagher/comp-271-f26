@@ -62,6 +62,7 @@ def test_rows_grow_on_demand():
     td = TwoDimensional()
     fill(td, 8)
     assert td.get_rows() == 2, "8 strings still fit in 2 rows of 4"
+
     td.add("ninth")
     assert td.get_rows() == 3, "the ninth string needs a third row"
     assert td.index_of("ninth") == (3, "A")
@@ -153,6 +154,8 @@ def test_count():
     assert td.count("x") == 0
     for s in ["x", "y", "x", "z", "w", "x", "y"]:
         td.add(s)
+    for j in range(len(td)):
+        print(td[j] + " ")
     assert td.count("x") == 3
     assert td.count("y") == 2
     assert td.count("q") == 0

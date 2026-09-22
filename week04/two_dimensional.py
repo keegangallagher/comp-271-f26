@@ -67,42 +67,92 @@ class TwoDimensional(OurContract):
         0 -> 'A', 1 -> 'B', ..., 8 -> 'J' (no 'I'), ..., 22 -> 'Y',
         23 -> 'AA', 24 -> 'AB', ..., 551 -> 'YY'.
         """
-        # TODO
-        pass
+        first_value = 0 
+        second_value = 0
 
+        if c < 23:
+            position = str(self.COLUMN_LETTERS[c])
+
+        else:
+            first_value = self.COLUMN_LETTERS[(c // 23) - 1]
+            second_value = self.COLUMN_LETTERS[(c % 23)]
+            position = (str(first_value) + str(second_value))
+                
+        return position 
+    
     def __position(self, p: int) -> tuple:
         """Return the (row, column_label) pair for flat index p, e.g. with
         4 columns, p = 5 is row 2, column 'B', so (2, 'B')."""
-        # TODO
-        pass
+        pos_row = (p  // self.__columns) + 1
+        pos_col = self.__column_label(p % self.__columns)
+
+        return (pos_row, pos_col)
+        
 
     def __grow(self) -> None:
         """Add one more row: allocate a bigger list, copy the old items,
         swap it in, and update the row count."""
-        # TODO
-        pass
+        
+        temp = [None] * ((self.__rows + 1) * self.__columns)
+        for i in range (len(self.__items)):
+            temp[i] = self.__items[i]
+
+        self.__items = temp
+
+        self.__rows += 1
+        
 
     def add(self, value: str) -> None:
         # TODO: grow first if the grid is full, then store value in the
         # next free cell (row-major) and update occupancy.
-        pass
+        if self.__occupancy == (self.__rows * self.__columns):
+            self.__grow()
+        
+        self.__occupancy += 1
+        
+        self.__items[self.__occupancy - 1] = value
+
 
     def contains(self, value: str) -> bool:
         # TODO: delegate to index_of, as we did in class.
-        pass
+       
+        return self.index_of(value) != ()
 
     def index_of(self, value: str) -> tuple:
         # TODO: return the (row, column_label) pair of the FIRST cell
         # holding value, e.g. (1, 'B'), or an empty tuple () if value is
         # not present. Search only occupied cells.
-        pass
+        result = ()
+        found = False
+
+        for i in range (self.__occupancy):
+            if self.__items[i] == value and not found:
+                index_pos = self.__position(i)
+                result = index_pos
+                found = True
+
+
+        return result
 
     def indices(self, value: str) -> tuple:
         # TODO: return a tuple of the (row, column_label) pair of EVERY
         # cell holding value, in row-major order, e.g. ((1, 'B'), (3, 'A')),
         # or an empty tuple () if value is not present.
-        pass
+        index_list = []
+
+        for i in range(self.__occupancy):
+            if self.__items[i] == value:
+                index_list += self.__position(i)
+
+        result = tuple(index_list)
+
+        return result
 
     def count(self, value: str) -> int:
         # TODO: how many occupied cells hold value.
-        pass
+        count = 0
+
+        for i in range(self.__occupancy):
+            count += 1
+
+        return count
