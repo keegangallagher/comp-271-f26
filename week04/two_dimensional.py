@@ -149,10 +149,10 @@ class TwoDimensional(OurContract):
         return result
 
     def count(self, value: str) -> int:
-        # TODO: how many occupied cells hold value.
         count = 0
 
         for i in range(self.__occupancy):
-            count += 1
+            if self.__items[i] == value:
+                count += 1
 
-        return count
+        return int(count)

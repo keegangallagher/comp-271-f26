@@ -205,7 +205,7 @@ if __name__ == "__main__":
     test_add_multiple_items_fills_slots_in_order()
     test_add_triggers_resize()
     test_get_item_out_of_range_returns_none()
-    #test_str_shows_occupied_items_only()
+    test_str_shows_occupied_items_only()
     test_remove_invalid_index_does_not_crash()
     test_remove_returns_item()
     test_remove_shifts_and_resizes_down()

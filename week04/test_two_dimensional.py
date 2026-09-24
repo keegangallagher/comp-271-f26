@@ -156,6 +156,7 @@ def test_count():
         td.add(s)
     for j in range(len(td)):
         print(td[j] + " ")
+    
     assert td.count("x") == 3
     assert td.count("y") == 2
     assert td.count("q") == 0
