@@ -20,7 +20,7 @@ class Trainline:
             # have to find the last one.
             last_station: Station = self.__head
             while last_station.has_next():
-                last_station = last_station.get_name()
+                last_station = last_station.get_next()
             # At the end of the loop, the traveler is at
             # the last station.
             last_station.set_next(new_station)
