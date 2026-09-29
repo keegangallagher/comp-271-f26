@@ -17,6 +17,18 @@ from OurContract import OurContract
 from two_dimensional import TwoDimensional
 
 
+def position(result):
+    """Normalize an index_of result so a tuple or a list both count."""
+    return tuple(result)
+
+
+def pairs(result):
+    """Normalize an indices result: a tuple OR a list of (row, label) pairs."""
+    assert isinstance(result, (tuple, list)), \
+        "indices must return a tuple or a list"
+    return tuple(tuple(pair) for pair in result)
+
+
 def fill(td, n):
     """Add the strings "s0", "s1", ..., "s<n-1>" in that order."""
     for k in range(n):
@@ -51,10 +63,10 @@ def test_add_is_row_major():
     td = TwoDimensional()
     for s in ["a", "b", "c", "d", "e"]:
         td.add(s)
-    assert td.index_of("a") == (1, "A"), "first string: row 1, column A"
-    assert td.index_of("b") == (1, "B"), "second string: row 1, column B"
-    assert td.index_of("d") == (1, "D"), "fourth string ends row 1"
-    assert td.index_of("e") == (2, "A"), "fifth string starts row 2"
+    assert position(td.index_of("a")) == (1, "A"), "first string: row 1, column A"
+    assert position(td.index_of("b")) == (1, "B"), "second string: row 1, column B"
+    assert position(td.index_of("d")) == (1, "D"), "fourth string ends row 1"
+    assert position(td.index_of("e")) == (2, "A"), "fifth string starts row 2"
     assert td.get_occupancy() == 5
 
 
@@ -64,9 +76,9 @@ def test_rows_grow_on_demand():
     assert td.get_rows() == 2, "8 strings still fit in 2 rows of 4"
     td.add("ninth")
     assert td.get_rows() == 3, "the ninth string needs a third row"
-    assert td.index_of("ninth") == (3, "A")
-    assert td.index_of("s0") == (1, "A"), "growing must keep old strings"
-    assert td.index_of("s7") == (2, "D"), "growing must keep old strings"
+    assert position(td.index_of("ninth")) == (3, "A")
+    assert position(td.index_of("s0")) == (1, "A"), "growing must keep old strings"
+    assert position(td.index_of("s7")) == (2, "D"), "growing must keep old strings"
     assert td.get_columns() == 4, "columns never change"
 
 
@@ -74,56 +86,56 @@ def test_many_rows_grow():
     td = TwoDimensional(3)
     fill(td, 30)
     assert td.get_rows() == 10
-    assert td.index_of("s29") == (10, "C")
+    assert position(td.index_of("s29")) == (10, "C")
 
 
 def test_labels_skip_i_o_and_z():
     td = TwoDimensional(23)
     fill(td, 23)
-    assert td.index_of("s7") == (1, "H")
-    assert td.index_of("s8") == (1, "J"), "no I"
-    assert td.index_of("s12") == (1, "N")
-    assert td.index_of("s13") == (1, "P"), "no O"
-    assert td.index_of("s22") == (1, "Y"), "23rd column is Y; no Z"
+    assert position(td.index_of("s7")) == (1, "H")
+    assert position(td.index_of("s8")) == (1, "J"), "no I"
+    assert position(td.index_of("s12")) == (1, "N")
+    assert position(td.index_of("s13")) == (1, "P"), "no O"
+    assert position(td.index_of("s22")) == (1, "Y"), "23rd column is Y; no Z"
 
 
 def test_double_letter_labels():
     td = TwoDimensional(30)
     fill(td, 30)
-    assert td.index_of("s22") == (1, "Y")
-    assert td.index_of("s23") == (1, "AA"), "24th column is AA"
-    assert td.index_of("s24") == (1, "AB")
-    assert td.index_of("s29") == (1, "AG")
+    assert position(td.index_of("s22")) == (1, "Y")
+    assert position(td.index_of("s23")) == (1, "AA"), "24th column is AA"
+    assert position(td.index_of("s24")) == (1, "AB")
+    assert position(td.index_of("s29")) == (1, "AG")
 
 
 def test_last_possible_column():
     td = TwoDimensional(552)
     fill(td, 553)
-    assert td.index_of("s22") == (1, "Y")
-    assert td.index_of("s45") == (1, "AY"), "AA..AY is 23 labels"
-    assert td.index_of("s46") == (1, "BA"), "then BA"
-    assert td.index_of("s551") == (1, "YY"), "552nd column is YY"
-    assert td.index_of("s552") == (2, "A")
+    assert position(td.index_of("s22")) == (1, "Y")
+    assert position(td.index_of("s45")) == (1, "AY"), "AA..AY is 23 labels"
+    assert position(td.index_of("s46")) == (1, "BA"), "then BA"
+    assert position(td.index_of("s551")) == (1, "YY"), "552nd column is YY"
+    assert position(td.index_of("s552")) == (2, "A")
 
 
 def test_index_of_not_found():
     td = TwoDimensional()
-    assert td.index_of("x") == (), "empty grid: not found is ()"
+    assert position(td.index_of("x")) == (), "empty grid: not found is ()"
     fill(td, 5)
-    assert td.index_of("x") == (), "absent value: not found is ()"
+    assert position(td.index_of("x")) == (), "absent value: not found is ()"
 
 
 def test_index_of_returns_first_match():
     td = TwoDimensional()
     for s in ["p", "q", "x", "r", "x"]:
         td.add(s)
-    assert td.index_of("x") == (1, "C")
+    assert position(td.index_of("x")) == (1, "C")
 
 
 def test_index_of_ignores_empty_cells():
     td = TwoDimensional()
     td.add("a")
-    assert td.index_of(None) == (), "unused cells are not stored strings"
+    assert position(td.index_of(None)) == (), "unused cells are not stored strings"
 
 
 def test_contains():
@@ -140,12 +152,12 @@ def test_indices():
     td = TwoDimensional()
     for s in ["x", "y", "x", "z", "w", "x", "y"]:
         td.add(s)
-    assert td.indices("x") == ((1, "A"), (1, "C"), (2, "B")), \
+    assert pairs(td.indices("x")) == ((1, "A"), (1, "C"), (2, "B")), \
         "every position, in row-major order"
-    assert td.indices("y") == ((1, "B"), (2, "C"))
-    assert td.indices("w") == ((2, "A"),), "one match: one-element tuple"
-    assert td.indices("q") == (), "no match: empty tuple"
-    assert isinstance(td.indices("x"), tuple), "must be a tuple, not a list"
+    assert pairs(td.indices("y")) == ((1, "B"), (2, "C"))
+    assert pairs(td.indices("w")) == ((2, "A"),), \
+        "one match: a one-element tuple or list of one pair"
+    assert pairs(td.indices("q")) == (), "no match: empty tuple or list"
 
 
 def test_count():
