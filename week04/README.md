@@ -83,10 +83,13 @@ Complete these in `two_dimensional.py`:
 5. **`index_of(value)`** — the `(row, label)` pair of the **first** match,
    or an empty tuple `()` if there is none. (`OurContract` says an
    `index_of` position is an integer; for a grid, a position is a pair.)
-   Search only the cells that hold strings.
+   Search only the cells that hold strings. As discussed in class, a list
+   in place of a tuple (`[]` for "none") is equally acceptable.
 6. **`indices(value)`** — a tuple of the pair for **every** match in
    row-major order, e.g. `((1, 'B'), (3, 'A'))`, or `()` if there is none.
-   A single match is still a tuple: `((2, 'C'),)`.
+   A single match is still a tuple: `((2, 'C'),)`. A list of pairs
+   (`[(1, 'B'), (3, 'A')]`, `[]`, `[(2, 'C')]`) is equally acceptable —
+   what matters is a sequence of pairs, not one flat run of rows and labels.
 7. **`contains(value)`** — delegate to `index_of`, as we did in class.
 8. **`count(value)`** — how many cells hold `value`.
 
@@ -114,8 +117,10 @@ use `DEFAULT_COLUMNS`, `INITIAL_ROWS`, `MAX_COLUMNS`, and
   `//` matter here?
 - Why must `index_of` search only the occupied cells? What would go wrong
   searching all `rows × columns` cells?
-- `index_of` and `indices` return tuples, not lists. Why is a tuple the
-  right choice for a "not found" answer and for a one-match answer?
+- `index_of` and `indices` may return tuples or lists. Whichever you chose,
+  why does a "not found" answer and a one-match answer still have to be a
+  sequence of the right shape? What are the trade-offs of a tuple versus a
+  list here?
 - `Array271` and `TwoDimensional` share no code, yet both are a
   `OurContract`. What does someone using either one get to assume?
 - Growing by one row each time is easy to write. What does it cost when a
