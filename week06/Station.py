@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+# A Station is one node of a singly-linked list: it only knows about the
+# station that comes after it, never the one before. BetterTrainLine chains
+# Stations together through __next to form the line.
 class Station:
 
     def __init__(self, name:str):
@@ -18,6 +21,9 @@ class Station:
     def get_next(self) -> Station:
         return self.__next
 
+    # has_next() exists so callers (e.g. the fast/slow pointer loops in
+    # BetterTrainLine) can check for a next Station without risking a
+    # None.get_next() crash.
     def has_next(self) -> bool:
         return self.__next is not None
 
