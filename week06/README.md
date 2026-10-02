@@ -27,6 +27,15 @@ Python — read it for the ideas and structure, not the syntax.
   `find_1_f_station` are all complete and unchanged from class.
   `add_list`, `get_names`, and `find_e_f_station` are `TODO`.
 - `Station.py` — unchanged from class.
+- `test_better_train_line_271.py` — plain-`assert` tests for all three
+  methods you're writing, no testing framework required. Everything
+  except the `find_e_f_station` checks should already pass against the
+  given scaffold; those fail (or crash with `AttributeError`) until you
+  implement it. Run it as you work:
+
+  ```
+  python3 test_better_train_line_271.py
+  ```
 
 Run the scaffold directly to see the given methods work:
 
@@ -126,6 +135,12 @@ correctly with:
 
 ```
 python3 better_train_line_271.py
+```
+
+and that it passes the provided tests with:
+
+```
+python3 test_better_train_line_271.py
 ```
 
 Due **Friday, October 9**, via Sakai.
