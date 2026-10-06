@@ -56,10 +56,8 @@ class BetterTrainLine:
             names: a list of station names to add, front to back. No
                 return value is expected.
         """
-        # TODO: for each name in names, build a Station and add it to
-        # the line the same way add() does above. Reuse add() rather
-        # than duplicating its head/last-pointer logic here.
-        pass
+        for name in names:
+            self.add(Station(name))
 
     def get_names(self) -> list:
         """Return the names of every station, in order of traversal.
@@ -71,11 +69,12 @@ class BetterTrainLine:
             list: the station names front to back. The line itself is
             not modified.
         """
-        # TODO: start at the head and walk the line (the same traversal
-        # shape as find_middle_station's loop, but visiting every
-        # station instead of skipping any), building up a list of names
-        # as you go.
-        pass
+        names: list = []
+        current: Station = self.__head
+        while current is not None:
+            names.append(current.get_name())
+            current = current.get_next()
+        return names
 
     def find_middle_station(self) -> Station:
         """Find the station halfway down the line in one pass.
@@ -131,11 +130,55 @@ class BetterTrainLine:
         Returns:
             Station: the 1/f station.
         """
-        # TODO: implement using the same fast/slow pattern as
-        # find_middle_station and find_one_third_station above, but with
-        # fast advancing f stations per iteration instead of a number
-        # hard-coded in the loop condition.
+        slow: Station = self.__head
+        fast: Station = self.__head
+        while self.__can_hop(fast, f):
+            slow = slow.get_next()
+            for _ in range(f):
+                fast = fast.get_next()
+        return slow
+
+    def find_e_f_station(self, e: int, f: int) -> Station:
+        """Find the station e out of every f stations down the line.
+
+        Generalizes find_1_f_station (the e=1 case) one step further:
+        slow now advances e stations per iteration while fast still
+        advances f, so find_e_f_station(1, f) must land on the same
+        station as find_1_f_station(f). Do this with a traversal only —
+        no self.__size, no // anywhere in this method.
+
+        Parameters:
+            e: numerator of the fraction of the line to walk to.
+            f: denominator of the fraction of the line to walk to. You
+                may assume e and f are positive integers with e < f;
+                you do not need to validate them for this assignment.
+        Returns:
+            Station: the e/f station.
+        """
+        # TODO: same shape as find_1_f_station, but slow now advances e
+        # stations per iteration (instead of 1) while fast still
+        # advances f. Stop under the same condition as find_1_f_station
+        # — as soon as fast can't complete one more full f-station hop.
         pass
+
+    def __can_hop(self, station: Station, hops: int) -> bool:
+        """Check whether station can advance hops stations without
+        running off the end of the line.
+
+        Parameters:
+            station: the station to hop from.
+            hops: how many stations ahead to check for.
+        Returns:
+            bool: True if hops consecutive get_next() calls starting at
+            station would all succeed, False otherwise.
+        """
+        current: Station = station
+        can_hop: bool = True
+        for _ in range(hops):
+            can_hop = can_hop and current.has_next()
+            if can_hop:
+                current = current.get_next()
+        return can_hop
 
 
 if __name__ == "__main__":
@@ -146,17 +189,20 @@ if __name__ == "__main__":
     print(f"Middle station: {line.find_middle_station().get_name()}")
     print(f"One-third station: {line.find_one_third_station().get_name()}")
 
-    # Once find_1_f_station is implemented, these should print the same
-    # names as the two lines above.
-    # print(f"1/2 station: {line.find_1_f_station(2).get_name()}")
-    # print(f"1/3 station: {line.find_1_f_station(3).get_name()}")
+    # These print the same names as the two lines above.
+    print(f"1/2 station: {line.find_1_f_station(2).get_name()}")
+    print(f"1/3 station: {line.find_1_f_station(3).get_name()}")
 
-    # Once add_list is implemented, this should build a second line
-    # identical in structure to the one built by the loop above.
-    # other_line = BetterTrainLine("Red Line (via add_list)")
-    # other_line.add_list(["Howard", "Jarvis", "Morse", "Loyola", "Granville"])
-    # print(f"Other line's middle station: {other_line.find_middle_station().get_name()}")
+    # Builds a second line identical in structure to the one built by
+    # the loop above.
+    other_line = BetterTrainLine("Red Line (via add_list)")
+    other_line.add_list(["Howard", "Jarvis", "Morse", "Loyola", "Granville"])
+    print(f"Other line's middle station: {other_line.find_middle_station().get_name()}")
 
-    # Once get_names is implemented, this should print
-    # ['Howard', 'Jarvis', 'Morse', 'Loyola', 'Granville'].
-    # print(f"Names in order: {line.get_names()}")
+    # Prints ['Howard', 'Jarvis', 'Morse', 'Loyola', 'Granville'].
+    print(f"Names in order: {line.get_names()}")
+
+    # Once find_e_f_station is implemented, these should print Morse and
+    # Jarvis again — e=1 is the same case as find_1_f_station.
+    # print(f"e/f=1/2 station: {line.find_e_f_station(1, 2).get_name()}")
+    # print(f"e/f=1/3 station: {line.find_e_f_station(1, 3).get_name()}")

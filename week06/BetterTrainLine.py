@@ -19,10 +19,20 @@ class BetterTrainLine:
 
         Parameters:
             name: the name of the line, e.g. "Red Line".
+            head: the first station in the line, or None if the line is empty.
+            last: the last station in the line, or None if the line is empty.
+            size: the number of stations in the line, starting at 0.
         """
         self.__name: str = name
         self.__head: Station = None
         self.__last: Station = None
+        # Do not use size to solve assignments for this object. Your s
+        # solutions should be based on travering the linked list. 
+        # You may use size to check your work, but it is not a substitute for
+        # correct traversal logic. Besides if you used size to find, say
+        # the middle station on a line with 7 stations, you would get the 3rd 
+        # station (7//2), not the 4th, which is the correct one. So size is not a 
+        # reliable substitute for correct traversal logic.
         self.__size: int = 0
 
     def __str__(self):
@@ -74,12 +84,56 @@ class BetterTrainLine:
         # the first station in the line.
         if not isinstance(f, int) or f < 1 or f > self.__size:
             f = self._SAFE_FRACTION
-        position: int = self.__size // f
-        cursor: Station = self.__head
-        count: int = 0
-        # Even if the line is empty, this loop will never run, and cursor will
-        # remain None, which is the correct return value for an empty line.
-        while count < position:
-            cursor = cursor.get_next()
+        # Let's start the traversal using a fast and a slow cursor.
+        # The fast cursor will move f steps for every 1 step the 
+        # slow cursor moves.
+        slow = self.__head
+        fast = self.__head
+        # The loop below is conditioned on the fast cursor's ability
+        # to hop (skip) f stations ahead. If the ability is confirmed, 
+        # the fast cursor hops f stations ahead, and the slow cursor,
+        # hops one. To keep the code clean, we use two helper functions
+        # to determine if the fast cursor can hop f stations ahead, and
+        # to perform the hop. The loop ends when the fast cursor can no
+        # longer hop f stations ahead, at which point the slow cursor is
+        # at the (1/f)-th station in the line.
+        while self.__can_hop(fast, f):
+            # Move the fast cursor f stations ahead ... 
+            fast = self.__hop(fast, f)
+            # ... and the slow cursor 1 station ahead.
+            slow = slow.get_next()
+        # When the loop ends, the slow cursor is at the (1/f)-th station
+        # in the line, so we return it.
+        return slow
+
+    def __can_hop(self, station: Station, f: int) -> bool:
+        """Determine if the given station can hop f stations ahead.
+
+        Parameters:
+            station: the current station to check.
+            f: the number of stations to hop ahead.
+        """
+        can = True
+        count = 0
+        probe = station
+        while count < f and can:
+            if probe == None:
+                can = False
+            else:
+                probe = probe.get_next()
+                count += 1
+        return can
+
+    def __hop(self, station: Station, f: int) -> Station:
+        """Hop f stations ahead from the given station.
+
+        Parameters:
+            station: the current station to hop from.
+            f: the number of stations to hop ahead.
+        """
+        count = 0
+        probe = station
+        while count < f and probe != None:
+            probe = probe.get_next()
             count += 1
-        return cursor
+        return probe
