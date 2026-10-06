@@ -45,23 +45,74 @@ class TrainLine271(OurContract):
         # TODO: wrap value in a new Station and attach it after the last
         # station, the BetterTrainLine way -- a fixed number of steps no
         # matter how long the line is. An empty line is the special case.
-        pass
+        new_station = Station(value)
+
+        if self.__head == None:
+            self.__head = new_station
+            
+
+        else:
+            self.__last.set_next(new_station)
+            
+        
+        self.__last = new_station
+                 
 
     def contains(self, value: str) -> bool:
         # TODO: delegate to index_of, as we did in class.
-        pass
+        if self.index_of(value) == []:
+            contains = False
+        else:
+            contains = True
+
+        return contains 
+
 
     def index_of(self, value: str) -> list:
         # TODO: return a one-element list with the position of the FIRST
         # station named value, e.g. [2], or an empty list [] if there is
         # no such station. Stop walking as soon as you find it.
-        pass
+        rider: Station = self.__head
+        location = []
+        count = 0
+
+        while rider is not None and rider.get_name() != value:
+            rider = rider.get_next()
+            count += 1
+
+        if rider != None:
+            location.append(count)
+
+        return location 
+    
 
     def indices(self, value: str) -> list:
         # TODO: return a list with the position of EVERY station named
         # value, front to back, e.g. [1, 4], or [] if there is none.
-        pass
+        indicies = []
+        rider: Station = self.__head 
+        count = 0
+
+        while rider is not None:
+            if rider.get_name() == value:
+                indicies.append(count)
+
+            rider = rider.get_next()
+            count += 1
+
+        return indicies
 
     def count(self, value: str) -> int:
         # TODO: how many stations are named value.
-        pass
+        count = 0 
+        rider: Station = self.__head
+
+        while rider != None:
+            if rider.get_name() == value:
+                count += 1
+
+            rider = rider.get_next()
+
+        return count
+
+        
