@@ -159,7 +159,18 @@ class BetterTrainLine:
         # stations per iteration (instead of 1) while fast still
         # advances f. Stop under the same condition as find_1_f_station
         # — as soon as fast can't complete one more full f-station hop.
-        pass
+        slow_rider: Station = self.__head
+        fast_rider: Station = self.__head
+        
+        while self.__can_hop(fast_rider, f):
+            
+            for _ in range(e):
+                slow_rider = slow_rider.get_next()
+
+            for _ in range(f):
+                fast_rider = fast_rider.get_next()
+
+        return slow_rider
 
     def __can_hop(self, station: Station, hops: int) -> bool:
         """Check whether station can advance hops stations without
