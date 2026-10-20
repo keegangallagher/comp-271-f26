@@ -61,10 +61,18 @@ def merge_sort_iterative(arr: list[int]) -> list[int]:
     Use the given merge() for the merging itself. Do not call merge_sort
     (or this function) from in here, and do not use sorted() or .sort().
     """
-    result = list(arr)
-    # TODO: repeatedly merge neighboring runs, doubling the run width each pass
-    return result
+    result = arr
+    width = 1
+    while width < len(arr):
+        new = []
+        for i in range(0, len(arr), 2 * width):
+            left = result[i : i + width]
+            right = result[i + width : i + 2 * width]
+            new += merge(left,right)
 
+        result = new
+        width *= 2
+    return result
 
 # ---------------------------------------------------------------- Part 2
 

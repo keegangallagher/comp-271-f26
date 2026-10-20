@@ -33,7 +33,7 @@ TRIALS = 10
 # value of n. Once a size costs more than this, we stop testing that
 # function. Without a limit like this, a function that grows quickly would
 # make us wait a very long time.
-TIME_LIMIT = 0.5
+TIME_LIMIT = 2.0
 
 
 def random_array(n: int) -> list[int]:
@@ -87,7 +87,7 @@ if __name__ == "__main__":
             # One line per size: n, then the average seconds per call.
             # The :.6f formats the time with six digits after the decimal
             # point, so very small times still show up as nonzero.
-            print(n, f"{avg:.6f}")
+            print( f"{avg:.6f}")
 
             # Double n for the next round: 2, 4, 8, 16, 32, ...
             # Doubling covers a huge range of sizes in only a few steps,
