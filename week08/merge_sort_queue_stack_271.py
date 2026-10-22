@@ -104,14 +104,27 @@ class ArrayQueue271:
         """Add item at the back. Return True if added; if the queue is
         full, change nothing and return False."""
         added = False
-        # TODO
+
+        if self.used < self.capacity:
+            added = True 
+            self.storage[self.back] = item
+            self.back += 1
+            self.used += 1
+            
+        
+        print(self.storage)
         return added
 
     def remove(self):
         """Remove and return the front item. If the queue is empty,
         change nothing and return None."""
         item = None
-        # TODO
+        if self.storage[0] != None:
+            self.storage[0] = None
+            item = True
+            '''for i in range (self.front, self.used - 1):
+                self.storage[i] = self.storage[i+1]
+                item = self.storage[0] '''
         return item
 
     def __str__(self) -> str:
@@ -145,14 +158,18 @@ class ArrayStack271:
         """Push item. Return True if added; if the stack is full, change
         nothing and return False."""
         added = False
-        # TODO
+        if self.used < self.capacity:
+            self.storage[self.top - self.used] = item
         return added
 
     def remove(self):
         """Pop and return the most recently added item. If the stack is
         empty, change nothing and return None."""
         item = None
-        # TODO
+        if self.used != 0:
+            self.top = None
+            item = self.storage[self.top - 1]
+        
         return item
 
     def __str__(self) -> str:
