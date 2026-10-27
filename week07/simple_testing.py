@@ -28,13 +28,37 @@ from comp271_mystery_sorters import gandalf, saruman, sauron
 # sample, not a measurement: the computer is busy with other things, and
 # different random lists can behave differently. Averaging several runs
 # smooths that noise out.
-TRIALS = 10
+TRIALS = 5
 
-# How many seconds we allow ourselves to spend on ALL the trials at one
-# value of n. Once a size costs more than this, we stop testing that
-# function. Without a limit like this, a function that grows quickly would
-# make us wait a very long time.
-TIME_LIMIT = 0.5
+# Stopping rule 1: if ONE call takes longer than this many seconds, we
+# interrupt it and drop the function.
+PER_CALL_LIMIT = 5
+
+# Stopping rule 2: if the TOTAL time spent on one function passes this many
+# seconds, we drop it. With small steps, no single call looks slow for a long
+# time, but the total keeps adding up; this rule catches that.
+TOTAL_LIMIT = 60.0
+
+# Where each function starts, and how much n grows each step. gandalf and
+# saruman start at 16 and add 2. sauron is different: at n = 16 a single call
+# can take years, so we start tiny and add 1. It will stop around n = 10,
+# and that is the expected result, not a bug.
+SETTINGS = {
+    "gandalf": (16, 2),
+    "saruman": (16, 2),
+    "sauron": (2, 1),
+}
+
+
+class CallTooSlow(Exception):
+    """Raised when a single call runs past PER_CALL_LIMIT."""
+
+
+def interrupt_call(signum, frame):
+    """The operating system calls this when the alarm goes off. We turn the
+    alarm into an exception, which the try/except below can catch. (macOS and
+    Linux only; on Windows, press Ctrl-C and note the size you were on.)"""
+    raise CallTooSlow()
 
 
 def random_array(n: int) -> list[int]:
@@ -99,10 +123,16 @@ if __name__ == "__main__":
         while keep_going:
             avg = average_time(function, n)
 
-            # One line per size: n, then the average seconds per call.
-            # The :.6f formats the time with six digits after the decimal
-            # point, so very small times still show up as nonzero.
-            print(n, f"{avg:.6f}")
+            if avg is None:
+                # Rule 1: a call was interrupted. Write down this size.
+                print(f"stopped at n = {n}: a call took more than "
+                      f"{PER_CALL_LIMIT} seconds")
+                keep_going = False
+            else:
+                # One line per size: n, then the average seconds per call.
+                # The :.6f formats the time with six digits after the decimal
+                # point, so very small times still show up as nonzero.
+                print(n, f"{avg:.6f}")
 
                 # Rule 2: the total time on this function.
                 if time.perf_counter() - function_start > TOTAL_LIMIT:
