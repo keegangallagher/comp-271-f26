@@ -17,6 +17,8 @@ public class BinarySearchTree {
      */
     private int size;
 
+    private int occurrences;
+
     /** Creates an empty tree. */
     public BinarySearchTree() {
         // An empty tree has no root and no nodes. null is Java's None.
@@ -56,6 +58,7 @@ public class BinarySearchTree {
      * @return root of the subtree after the insertion step
      */
     private Node insertRec(Node currentNode, Node newNode) {
+        this.occurrences = 0;
         if (currentNode == null) {
             // An empty link is the insertion point. The new node becomes this
             // subtree, and the node count goes up by one.
@@ -71,11 +74,9 @@ public class BinarySearchTree {
             // Larger: go right, and store the result as the right child.
             currentNode.setRight(this.insertRec(currentNode.getRight(), newNode));
         } else {
-            // PART B (frequency): compareTo returned 0, so the value is already
-            // in the tree. Right now the duplicate is simply dropped (the new
-            // node is thrown away). Decide what this branch should do so the
-            // tree remembers the repeat.
-            // size counts distinct values, so size must not change.
+
+            occurrences ++;
+            
         }
         // Return this subtree's root: the new node in the base case, otherwise
         // the node we were given. One return, at the end.
@@ -94,8 +95,11 @@ public class BinarySearchTree {
      */
     public boolean search(String value) {
         boolean found = false; // pessimistic: assume the value is not there
-        // TODO: replace the next line with your code.
-        found = false;
+        
+        Node searchNode = new Node(value);
+
+        found = searchRec(this.root, searchNode);
+
         return found;
     } // method search
 
@@ -115,8 +119,25 @@ public class BinarySearchTree {
      */
     private boolean searchRec(Node currentNode, Node target) {
         boolean found = false; // pessimistic default
-        // TODO: replace the next line with your code.
-        found = false;
+        
+        if (currentNode != null ){
+
+            if (target.compareTo(currentNode)< 0) {
+
+                found = this.searchRec(currentNode.getLeft(), target);
+
+            }else if (target.compareTo(currentNode) > 0){
+
+                found = this.searchRec(currentNode.getRight(), target);
+
+            }else{
+
+                found = true;
+
+            }
+
+        }
+            
         return found;
     } // method searchRec
 
@@ -129,9 +150,10 @@ public class BinarySearchTree {
      * @return number of insertions of the value; 0 if it was never inserted
      */
     public int frequency(String value) {
-        int occurrences = 0; // pessimistic: assume the value is not there
-        // TODO: replace the next line with your code.
-        occurrences = 0;
+        this.occurrences = 0; // pessimistic: assume the value is not there
+        if (search(value) == true){
+            occurrences ++;
+        }
         return occurrences;
     } // method frequency
 }
