@@ -3,7 +3,11 @@
  * {@link String#compareTo(String)}.
  * Each node's left and right links represent smaller and larger subtrees,
  * respectively. Inserting a value that is already stored does not add a node:
- * the tree records the repeat (Week 11, Part B).
+ * What this code now does in regards to repeats is if the value is already in the tree and someone tries to insert it
+ * instead os just ending the insert will now incrament my new private method. I made a new variable called findRec which
+ * is the same as my searchRec but it returns an int instead of a bool, this was the crux of this addition as the Java
+ * got really mad at me when I tried to manipulate the searchRec bool as an int. found uses findRec to 
+ * go through and find the value target then fet the occurrences that i stored in the Node.
  */
 public class BinarySearchTree {
 
@@ -58,7 +62,7 @@ public class BinarySearchTree {
      * @return root of the subtree after the insertion step
      */
     private Node insertRec(Node currentNode, Node newNode) {
-        this.occurrences = 0;
+        
         if (currentNode == null) {
             // An empty link is the insertion point. The new node becomes this
             // subtree, and the node count goes up by one.
@@ -75,8 +79,8 @@ public class BinarySearchTree {
             currentNode.setRight(this.insertRec(currentNode.getRight(), newNode));
         } else {
 
-            occurrences ++;
-            
+            currentNode.incramentOccurrences(); //this uses my private method to incrament the occurrences for this node
+
         }
         // Return this subtree's root: the new node in the base case, otherwise
         // the node we were given. One return, at the end.
@@ -151,9 +155,34 @@ public class BinarySearchTree {
      */
     public int frequency(String value) {
         this.occurrences = 0; // pessimistic: assume the value is not there
-        if (search(value) == true){
-            occurrences ++;
+        
+        Node found = this.findRec(this.root, new Node(value));
+        
+        if (found != null){
+            occurrences = found.getOccurrences();
         }
+
         return occurrences;
+    }
+
+    private Node findRec(Node currentNode, Node target) { //new private method because i need searchRec to find the Node im getting occurrances for but search returns a bool and i need an int
+        Node found = null;
+
+        if (currentNode != null) {
+
+            if (target.compareTo(currentNode)  < 0 ) {
+                found = this.findRec(currentNode.getLeft(), target);
+
+            } else if (target.compareTo(currentNode) > 0) {
+                found = this.findRec(currentNode.getRight(), target);
+
+            } else {
+                found = currentNode;
+
+            }
+   
+        }
+        return found;
+    }
     } // method frequency
-}
+

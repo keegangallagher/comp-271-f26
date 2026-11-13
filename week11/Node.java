@@ -10,6 +10,15 @@ public class Node implements Comparable<Node> {
     private String value;
     private Node left;
     private Node right;
+    private int occurrences = 1;
+
+    public int getOccurrences() { //new method, I added this to track the occurrances within the node
+        return this.occurrences;
+    }
+
+    public void incramentOccurrences() {
+        this.occurrences ++;
+    }
 
     /**
      * Creates a node with no children.
